@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>database</type>
+		<description>Language labels for database tables/fields belonging to extension 'file'</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="sys_file_mountpoints">VFS Mountpoints</label>
+			<label index="sys_file_mountpoints.name">Name</label>
+			<label index="sys_file_mountpoints.description">Description</label>
+			<label index="sys_file_mountpoints.storage">Storage</label>
+			<label index="sys_file_mountpoints.storage_configuration">Storage Configuration</label>
+			<label index="sys_file">VFS File</label>
+			<label index="sys_file.mount">Mount</label>
+            <label index="sys_file.identifier">Identifier</label>
+            <label index="sys_file.name">Name</label>
+			<label index="sys_file.sha1">SHA1</label>
+			<label index="sys_file.size">Size</label>
+			<label index="sys_file.usage_count">Usage Count</label>
+			<label index="sys_file_references">VFS File Usages</label>
+			<label index="sys_file_references.uid_local">File Record (Local)</label>
+			<label index="sys_file_references.uid_foreign">The using record (Foreign)</label>
+			<label index="sys_file_references.tablenames">Table name</label>
+			<label index="sys_file_references.fieldname">Foreign Field (not used yet)</label>
+			<label index="sys_file_references.sorting_foreign">Sorting foreign</label>
+			<label index="sys_file_references.table_local">Local Table (not used yet)</label>
+			<label index="sys_file_references.title">Title overlay</label>
+			<label index="sys_file_references.description">Description overlay</label>
+			<label index="sys_file_references.downloadname">Download name overlay</label>
+			<label index="sys_file_collection">VFS Collection (local static collection)</label>
+			<label index="sys_file_collection.files">Files (with overlay)</label>
+			<label index="sys_file_collection.name">Name</label>
+			<label index="pages.tx_file_images_list">Images list</label>
+			<label index="tt_content.tx_file_images_overlayed">VFS Images</label>
+		</languageKey>
+	</data>
+</T3locallang>
