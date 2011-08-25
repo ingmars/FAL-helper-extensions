@@ -163,9 +163,7 @@ class  tx_vfsfilelist_module1 extends t3lib_SCbase {
 				function displayFileList() {
 					$content = '';
 
-					/**
-					 * @var $fileRepository t3lib_vfs_Domain_Repository_MountRepository
-					 */
+					/** @var $mountRepository t3lib_vfs_Domain_Repository_MountRepository */
 					$mountRepository = t3lib_div::makeInstance('t3lib_vfs_Domain_Repository_MountRepository');
 					$mounts = $mountRepository->findAvailableMounts();
 					$mountListRow = array();
@@ -180,25 +178,22 @@ class  tx_vfsfilelist_module1 extends t3lib_SCbase {
 					}
 					$mountListContent = implode(chr(10), $mountListRow);
 
-					$content .= $this->doc->section('List of Mounts:',$mountListContent,0,1);
+					$content .= $this->doc->section('List of Mounts:', '<ul>' . $mountListContent . '</ul>', 0, 1);
 
-					/**
-					 * @var $firstMount t3lib_vfs_Domain_Model_Mount
-					 */
+					/** @var $firstMount t3lib_vfs_Domain_Model_Mount */
 
 					// List root-level files and collections in first mount
 
 					if(isset($firstMount)) {
-						/**
-						 * @var $collections[] t3lib_vfs_Domain_Model_StorageCollection
-						 */
-						$collections = $firstMount->getRootLevelStorageCollections();
+						/** @var $collection t3lib_vfs_Domain_Model_StorageCollection */
+						$collection = $firstMount->getRootLevelStorageCollection();
 
-						foreach($collections as $collection) {
-							$rootCollectionContent = '<li>'.$collection->getName().'</li>';
+						foreach ($collection->getFiles() as $file) {
+							$rootCollectionContent .= '<li>' . $file['name'] . '</li>';
 						}
 
-						$content .= $this->doc->section('List of root directories (collections) in the first mount:',$rootCollectionContent,0,1);
+						$content .= $this->doc->section('List of files in the first mount:',
+						                                '<ul>' . $rootCollectionContent . '</ul>',0,1);
 					}
 
 					return $content;
