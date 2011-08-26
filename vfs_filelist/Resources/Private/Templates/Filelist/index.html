@@ -1,0 +1,12 @@
+<f:layout name="backend" />
+
+<f:section name="contents">
+
+	<h2>Available mounts</h2>
+	<ul>
+	<f:for each="{mounts}" as="mount">
+		<li><f:link.action action="list" arguments="{mount: mount.uid, path: '/'}">{mount.name}</f:link.action></li>
+	</f:for>
+	</ul>
+
+</f:section>
