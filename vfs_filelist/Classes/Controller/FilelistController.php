@@ -76,6 +76,22 @@ class Tx_VfsFilelist_Controller_FileListController extends Tx_Extbase_MVC_Contro
 		$this->view->assign('files', $currentCollection->getFiles());
 	}
 
+	public function indexFileAction() {
+		$mountUid = $this->request->getArgument('mount');
+		$mount = $this->mountRepository->findByUid($mountUid);
+
+		$file = $this->request->getArgument('file');
+		$file['mount'] = $mountUid;
+
+		$fileObject = $this->factory->createFileObject($file);
+
+		/** @var t3lib_vfs_Domain_Repository_FileRepository $fileRepository */
+		$fileRepository = t3lib_div::makeInstance('t3lib_vfs_Domain_Repository_FileRepository');
+		$fileRepository->addToIndex($fileObject);
+
+		$this->redirect('list', NULL, NULL, array('mount' => $mountUid, 'path' => dirname($fileObject->getIdentifier())));
+	}
+
 	/**
 	 * Processes a general request. The result can be returned by altering the given response.
 	 *

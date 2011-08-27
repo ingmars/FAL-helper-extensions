@@ -9,14 +9,18 @@
 	<h2>Directories</h2>
 	<ul>
 	<f:for each="{directories}" as="directory">
-		<li><f:link.action action="list" arguments="{mount: mount.uid, path: directory.path}">{directory.name}</f:link.action></li>
+		<li><f:link.action action="list" arguments="{mount: mount.uid, path: directory.identifier}">{directory.name}</f:link.action></li>
 	</f:for>
 	</ul>
 
 	<h2>Files</h2>
 	<ul>
 	<f:for each="{files}" as="file">
-		<li>{file.name}</li>
+		<li>{file.name}&nbsp;&nbsp;
+			<f:if condition="{file.indexed}">
+				<f:else><f:link.action action="indexFile" arguments="{mount: mount.uid, file: file}">Index file</f:link.action></f:else>
+			</f:if>
+		</li>
 	</f:for>
 	</ul>
 
