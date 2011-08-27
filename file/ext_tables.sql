@@ -7,13 +7,6 @@
 #
 CREATE TABLE tt_content (
 	tx_file_images_overlayed int(11) DEFAULT '0' NOT NULL
-);
-
-
-#
-# Table structure for table 'pages'
-#
-CREATE TABLE pages (
 	tx_file_images_list int(11) DEFAULT '0' NOT NULL
 );
 
@@ -102,11 +95,17 @@ CREATE TABLE sys_file_references (
 	hidden tinyint(4) DEFAULT '0' NOT NULL,
 
 	# Reference fields (basically same as MM table)
+	# // uid_local would be the uid of the sys_file record
 	uid_local int(11) DEFAULT '0' NOT NULL,
+	# // uid_foreign would be e.g. the uid of a tt_content record
 	uid_foreign int(11) DEFAULT '0' NOT NULL,
+	# // tablenames would e.g. contain "tt_content":
 	tablenames varchar(255) DEFAULT '' NOT NULL,
+	# // fieldname would e.g. contain "images":
 	fieldname tinytext,
+	# // sorting_foreign would be the sorting order inside of the tt_content.images field
 	sorting_foreign int(11) DEFAULT '0' NOT NULL,
+	# // table_local is not used yet, but would be either "sys_file" or "sys_file_collection"
 	table_local varchar(255) DEFAULT '' NOT NULL,
 
 	# Local usage overlay fields

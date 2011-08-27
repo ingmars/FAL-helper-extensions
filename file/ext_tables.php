@@ -109,8 +109,22 @@ $tempColumns = array (
 				'foreign_field' => 'uid_foreign',
 				'foreign_sortby' => 'sorting_foreign',
 				'foreign_table_field' => 'tablenames',
+				'foreign_match_fields' => array(
+					'fieldname' => 'tx_file_images_overlayed',
+				),
 				'foreign_label' => 'uid_local',
 				'foreign_selector' => 'uid_local',
+				'appearance' => array(
+					'useSortable' => 'true',
+					'enabledControls' => array(
+						'info' => false,
+						'new' => true,
+						'dragdrop' => true,
+						'sort' => false,
+						'hide' => false,
+						'delete' => true,
+					),
+				),
 			)
 	),
 );
@@ -143,8 +157,8 @@ $tempColumns = array (
 );
 
 
-t3lib_div::loadTCA('pages');
-t3lib_extMgm::addTCAcolumns('pages',$tempColumns,1);
-t3lib_extMgm::addToAllTCAtypes('pages','tx_file_images_list;;;;1-1-1');
+t3lib_div::loadTCA('tt_content');
+t3lib_extMgm::addTCAcolumns('tt_content',$tempColumns,1);
+t3lib_extMgm::addToAllTCAtypes('tt_content','tx_file_images_list;;;;1-1-1');
 
 ?>
