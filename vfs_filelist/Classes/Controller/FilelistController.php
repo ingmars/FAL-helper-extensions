@@ -78,10 +78,11 @@ class Tx_VfsFilelist_Controller_FileListController extends Tx_Extbase_MVC_Contro
 
 	public function indexFileAction() {
 		$mountUid = $this->request->getArgument('mount');
+		/** @var $mount t3lib_vfs_Domain_Model_Mount */
 		$mount = $this->mountRepository->findByUid($mountUid);
 
 		$file = $this->request->getArgument('file');
-		$file['mount'] = $mountUid;
+		$file = $mount->getStorage()->getFile($file);
 
 		$fileObject = $this->factory->createFileObject($file);
 

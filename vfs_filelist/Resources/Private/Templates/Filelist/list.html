@@ -18,7 +18,8 @@
 	<f:for each="{files}" as="file">
 		<li>{file.name}&nbsp;&nbsp;
 			<f:if condition="{file.indexed}">
-				<f:else><f:link.action action="indexFile" arguments="{mount: mount.uid, file: file}">Index file</f:link.action></f:else>
+				<f:then>indexed</f:then>
+				<f:else><f:link.action action="indexFile" arguments="{mount: mount.uid, file: file.identifier}">Index file</f:link.action></f:else>
 			</f:if>
 		</li>
 	</f:for>
