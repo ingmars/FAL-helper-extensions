@@ -24,4 +24,13 @@
 	</f:for>
 	</ul>
 
+	<h2>Upload</h2>
+	<f:form action="upload" enctype="multipart/form-data">
+		<f:form.hidden name="mount" value="{mount.uid}" />
+		<f:form.hidden name="identifier" value="{path}" />
+
+		<f:form.upload name="file" />
+		<f:form.submit value="Upload" />
+	</f:form>
+
 </f:section>

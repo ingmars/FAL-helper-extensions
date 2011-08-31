@@ -92,6 +92,32 @@ class Tx_VfsFilelist_Controller_FileListController extends Tx_Extbase_MVC_Contro
 		$this->redirect('list', NULL, NULL, array('mount' => $mountUid, 'path' => dirname($fileObject->getIdentifier())));
 	}
 
+	public function uploadAction() {
+		$mountUid = $this->request->getArgument('mount');
+		/** @var $mount t3lib_vfs_Domain_Model_Mount */
+		$mount = $this->mountRepository->findByUid($mountUid);
+
+		$path = $this->request->getArgument('identifier');
+
+		/** @var $uploader t3lib_vfs_Service_UploaderService */
+		$uploader = t3lib_div::makeInstance('t3lib_vfs_Service_UploaderService');
+
+		$files = $_FILES['tx_vfsfilelist_tools_vfsfilelistfilelist'];
+		if (isset($files['name']['file'])) {
+			if ($files['error']['file']) {
+				// TODO handle error
+			}
+			$tempfileName = $files['tmp_name']['file'];
+			$origFilename = $files['name']['file'];
+			$uploader->addUploadedFile($tempfileName, $mount, $path, $origFilename);
+		} elseif (isset($files['name']['files']) && is_array($files['name']['files'])) {
+			// TODO multiple files
+		}
+		//$uploader->addUploadedFile();
+
+		$this->redirect('list', NULL, NULL, array('mount' => $mountUid, 'path' => $path));
+	}
+
 	/**
 	 * Processes a general request. The result can be returned by altering the given response.
 	 *
