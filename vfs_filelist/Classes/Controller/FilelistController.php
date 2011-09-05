@@ -82,7 +82,7 @@ class Tx_VfsFilelist_Controller_FileListController extends Tx_Extbase_MVC_Contro
 		$mount = $this->mountRepository->findByUid($mountUid);
 
 		$file = $this->request->getArgument('file');
-		$file = $mount->getStorage()->getFile($file);
+		$file = $mount->getDriver()->getFile($file);
 
 		$fileObject = $this->factory->createFileObject($file);
 
