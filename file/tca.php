@@ -3,12 +3,12 @@ if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 
-$TCA['sys_file_mountpoints'] = array (
-	'ctrl' => $TCA['sys_file_mountpoints']['ctrl'],
+$TCA['sys_file_storage'] = array (
+	'ctrl' => $TCA['sys_file_storage']['ctrl'],
 	'interface' => array (
 		'showRecordFieldList' => 'hidden,name,description,storage,storage_configuration'
 	),
-	'feInterface' => $TCA['sys_file_mountpoints']['feInterface'],
+	'feInterface' => $TCA['sys_file_storage']['feInterface'],
 	'columns' => array (
 		'hidden' => array (		
 			'exclude' => 1,
@@ -18,9 +18,22 @@ $TCA['sys_file_mountpoints'] = array (
 				'default' => '0'
 			)
 		),
+		'type' => array(
+			'exclude' => 0,
+			'label' => 'LLL:EXT:file/locallang_db.xml:sys_file_storage.type',
+			'config' => array(
+				'type' => 'select',
+				'items' => array(
+					array('Mount', 'm'),
+					array('Publishing target', 'p')
+				),
+				'size' => 1,
+				'maxitems' => 1
+			)
+		),
 		'name' => array (		
 			'exclude' => 0,		
-			'label' => 'LLL:EXT:file/locallang_db.xml:sys_file_mountpoints.name',		
+			'label' => 'LLL:EXT:file/locallang_db.xml:sys_file_storage.name',		
 			'config' => array (
 				'type' => 'input',	
 				'size' => '30',
@@ -28,24 +41,24 @@ $TCA['sys_file_mountpoints'] = array (
 		),
 		'description' => array (		
 			'exclude' => 0,		
-			'label' => 'LLL:EXT:file/locallang_db.xml:sys_file_mountpoints.description',		
+			'label' => 'LLL:EXT:file/locallang_db.xml:sys_file_storage.description',		
 			'config' => array (
 				'type' => 'text',
 				'cols' => '30',	
 				'rows' => '5',
 			)
 		),
-		'storage' => array (		
+		'driver' => array (
 			'exclude' => 0,		
-			'label' => 'LLL:EXT:file/locallang_db.xml:sys_file_mountpoints.storage',		
+			'label' => 'LLL:EXT:file/locallang_db.xml:sys_file_storage.driver',
 			'config' => array (
 				'type' => 'input',	
 				'size' => '30',
 			)
 		),
-		'storage_configuration' => array (		
+		'driver_configuration' => array (
 			'exclude' => 0,		
-			'label' => 'LLL:EXT:file/locallang_db.xml:sys_file_mountpoints.storage_configuration',		
+			'label' => 'LLL:EXT:file/locallang_db.xml:sys_file_storage.driver_configuration',
 			'config' => array (
 				'type' => 'text',
 				'cols' => '30',	
@@ -54,7 +67,8 @@ $TCA['sys_file_mountpoints'] = array (
 		),
 	),
 	'types' => array (
-		'0' => array('showitem' => 'hidden;;1;;1-1-1, name, description, storage, storage_configuration')
+		'1' => array('showitem' => 'hidden;;1;;1-1-1, type, name, description, driver, driver_configuration'),
+		'p' => array('showitem' => 'hidden;;1;;1-1-1, type, name, description, driver, driver_configuration')
 	),
 	'palettes' => array (
 		'1' => array('showitem' => '')
@@ -166,8 +180,8 @@ $TCA['sys_file'] = array (
 				'items' => array (
 					array('',0),
 				),
-				'foreign_table' => 'sys_file_mountpoints',
-				'foreign_table_where' => 'ORDER BY sys_file_mountpoints.uid',
+				'foreign_table' => 'sys_file_storage',
+				'foreign_table_where' => 'ORDER BY sys_file_storage.uid',
 				'size' => 1,
 				'minitems' => 0,
 				'maxitems' => 1,

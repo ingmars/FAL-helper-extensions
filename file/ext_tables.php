@@ -3,22 +3,23 @@ if (!defined('TYPO3_MODE')) {
 	die ('Access denied.');
 }
 
-t3lib_extMgm::allowTableOnStandardPages('sys_file_mountpoints');
+t3lib_extMgm::allowTableOnStandardPages('sys_file_storage');
 
-$TCA['sys_file_mountpoints'] = array (
+$TCA['sys_file_storage'] = array (
 	'ctrl' => array (
-		'title'     => 'LLL:EXT:file/locallang_db.xml:sys_file_mountpoints',		
+		'title'     => 'LLL:EXT:file/locallang_db.xml:sys_file_storage',
 		'label'     => 'name',	
 		'tstamp'    => 'tstamp',
 		'crdate'    => 'crdate',
 		'cruser_id' => 'cruser_id',
 		'default_sortby' => 'ORDER BY name',
-		'delete' => 'deleted',	
+		'delete' => 'deleted',
+		'type' => 'type',
 		'enablecolumns' => array (		
 			'disabled' => 'hidden',
 		),
 		'dynamicConfigFile' => t3lib_extMgm::extPath($_EXTKEY).'tca.php',
-		'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'icon_sys_file_mountpoints.gif',
+		'iconfile'          => t3lib_extMgm::extRelPath($_EXTKEY).'icon_sys_file_storage.gif'
 	),
 );
 

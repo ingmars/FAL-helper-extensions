@@ -6,11 +6,12 @@
 	</meta>
 	<data type="array">
 		<languageKey index="default" type="array">
-			<label index="sys_file_mountpoints">VFS Mountpoints</label>
-			<label index="sys_file_mountpoints.name">Name</label>
-			<label index="sys_file_mountpoints.description">Description</label>
-			<label index="sys_file_mountpoints.storage">Storage</label>
-			<label index="sys_file_mountpoints.storage_configuration">Storage Configuration</label>
+			<label index="sys_file_storage">VFS Storage</label>
+			<label index="sys_file_storage.type">Type</label>
+			<label index="sys_file_storage.name">Name</label>
+			<label index="sys_file_storage.description">Description</label>
+			<label index="sys_file_storage.driver">Storage</label>
+			<label index="sys_file_storage.driver_configuration">Storage Configuration</label>
 			<label index="sys_file">VFS File</label>
 			<label index="sys_file.mount">Mount</label>
             <label index="sys_file.identifier">Identifier</label>
