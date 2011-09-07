@@ -328,7 +328,7 @@ $TCA['sys_file_references'] = array (
 			'label' => 'LLL:EXT:file/locallang_db.xml:sys_file_references.table_local',
 			'config' => array (
 				'type' => 'input',
-				'size' => '30',
+				'size' => '20',
 				'default' => 'sys_file',
 			)
 		),
@@ -337,7 +337,7 @@ $TCA['sys_file_references'] = array (
 			'label' => 'LLL:EXT:file/locallang_db.xml:sys_file_references.title',
 			'config' => array (
 				'type' => 'input',
-				'size' => '30',
+				'size' => '20',
 			)
 		),
 		'description' => array (
@@ -354,15 +354,25 @@ $TCA['sys_file_references'] = array (
 			'label' => 'LLL:EXT:file/locallang_db.xml:sys_file_references.downloadname',
 			'config' => array (
 				'type' => 'input',
-				'size' => '30',
+				'size' => '20',
 			)
 		),
 	),
 	'types' => array (
-		'0' => array('showitem' => 'hidden;;1;;1-1-1, uid_local, uid_foreign, tablenames, fieldname, sorting_foreign, table_local, title;;;;2-2-2, description;;;;3-3-3, downloadname')
+		'0' => array(
+			'showitem' => '
+				--palette--;LLL:EXT:file/locallang_db.xml:sys_file_references.overlayPalette;overlayPalette,
+				--palette--;;filePalette',
+		)
 	),
 	'palettes' => array (
-		'1' => array('showitem' => '')
+		'overlayPalette' => array(
+			'showitem' => 'title,description;;;;3-3-3,--linebreak--,downloadname',
+			'canNotCollapse' => true,
+		),
+		'filePalette' => array(
+			'showitem' => 'uid_local',
+		),
 	)
 );
 
