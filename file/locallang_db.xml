@@ -11,7 +11,7 @@
 			<label index="sys_file_storage.name">Name</label>
 			<label index="sys_file_storage.description">Description</label>
 			<label index="sys_file_storage.driver">Storage</label>
-			<label index="sys_file_storage.driver_configuration">Storage Configuration</label>
+			<label index="sys_file_storage.configuration">Storage Configuration</label>
 			<label index="sys_file">VFS File</label>
 			<label index="sys_file.mount">Mount</label>
             <label index="sys_file.identifier">Identifier</label>

@@ -6,7 +6,7 @@ if (!defined('TYPO3_MODE')) {
 $TCA['sys_file_storage'] = array (
 	'ctrl' => $TCA['sys_file_storage']['ctrl'],
 	'interface' => array (
-		'showRecordFieldList' => 'hidden,name,description,storage,storage_configuration'
+		'showRecordFieldList' => 'hidden,name,description,driver,configuration'
 	),
 	'feInterface' => $TCA['sys_file_storage']['feInterface'],
 	'columns' => array (
@@ -56,9 +56,9 @@ $TCA['sys_file_storage'] = array (
 				'size' => '30',
 			)
 		),
-		'driver_configuration' => array (
+		'configuration' => array (
 			'exclude' => 0,		
-			'label' => 'LLL:EXT:file/locallang_db.xml:sys_file_storage.driver_configuration',
+			'label' => 'LLL:EXT:file/locallang_db.xml:sys_file_storage.configuration',
 			'config' => array (
 				'type' => 'text',
 				'cols' => '30',	
@@ -67,8 +67,8 @@ $TCA['sys_file_storage'] = array (
 		),
 	),
 	'types' => array (
-		'1' => array('showitem' => 'hidden;;1;;1-1-1, type, name, description, driver, driver_configuration'),
-		'p' => array('showitem' => 'hidden;;1;;1-1-1, type, name, description, driver, driver_configuration')
+		'1' => array('showitem' => 'hidden;;1;;1-1-1, type, name, description, driver, configuration'),
+		'p' => array('showitem' => 'hidden;;1;;1-1-1, type, name, description, driver, configuration')
 	),
 	'palettes' => array (
 		'1' => array('showitem' => '')
