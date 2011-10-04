@@ -1,7 +1,7 @@
 <?php
 
 ########################################################################
-# Extension Manager/Repository config file for ext "vfs_filelist".
+# Extension Manager/Repository config file for ext "file_filelist".
 #
 # Auto generated 05-08-2011 14:42
 #
@@ -11,7 +11,7 @@
 ########################################################################
 
 $EM_CONF[$_EXTKEY] = array(
-	'title' => 'VFS Filelist (prototype)',
+	'title' => 'Filelist (prototype)',
 	'description' => '',
 	'category' => 'module',
 	'author' => 'Ingmar Schlecht',

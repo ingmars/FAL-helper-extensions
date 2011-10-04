@@ -32,16 +32,16 @@
  *
  * @author Andreas Wolf <andreas.wolf@ikt-werk.de>
  * @package TYPO3
- * @subpackage Tx_VfsFilelist
+ * @subpackage Tx_FileFilelist
  */
-class Tx_VfsFilelist_Controller_FileListController extends Tx_Extbase_MVC_Controller_ActionController {
+class Tx_FileFilelist_Controller_FileListController extends Tx_Extbase_MVC_Controller_ActionController {
 	/**
-	 * @var t3lib_vfs_Factory
+	 * @var t3lib_file_Factory
 	 */
 	protected $factory;
 
 	/**
-	 * @var t3lib_vfs_Domain_Repository_MountRepository
+	 * @var t3lib_file_Domain_Repository_MountRepository
 	 */
 	protected $mountRepository;
 
@@ -51,13 +51,13 @@ class Tx_VfsFilelist_Controller_FileListController extends Tx_Extbase_MVC_Contro
 	 * @return void
 	 */
 	protected function initializeAction() {
-		$this->factory = t3lib_div::makeInstance('t3lib_vfs_Factory');
+		$this->factory = t3lib_div::makeInstance('t3lib_file_Factory');
 
-		$this->mountRepository = t3lib_div::makeInstance('t3lib_vfs_Domain_Repository_MountRepository');
+		$this->mountRepository = t3lib_div::makeInstance('t3lib_file_Domain_Repository_MountRepository');
 	}
 
 	public function indexAction() {
-		/** @var $mountRepository t3lib_vfs_Domain_Repository_MountRepository */
+		/** @var $mountRepository t3lib_file_Domain_Repository_MountRepository */
 		$mounts = $this->mountRepository->findAvailableMounts();
 
 		$this->view->assign('mounts', $mounts);
@@ -78,7 +78,7 @@ class Tx_VfsFilelist_Controller_FileListController extends Tx_Extbase_MVC_Contro
 
 	public function indexFileAction() {
 		$mountUid = $this->request->getArgument('mount');
-		/** @var $mount t3lib_vfs_Domain_Model_Mount */
+		/** @var $mount t3lib_file_Domain_Model_Mount */
 		$mount = $this->mountRepository->findByUid($mountUid);
 
 		$file = $this->request->getArgument('file');
@@ -86,8 +86,8 @@ class Tx_VfsFilelist_Controller_FileListController extends Tx_Extbase_MVC_Contro
 
 		$fileObject = $this->factory->createFileObject($file);
 
-		/** @var t3lib_vfs_Domain_Repository_FileRepository $fileRepository */
-		$fileRepository = t3lib_div::makeInstance('t3lib_vfs_Domain_Repository_FileRepository');
+		/** @var t3lib_file_Domain_Repository_FileRepository $fileRepository */
+		$fileRepository = t3lib_div::makeInstance('t3lib_file_Domain_Repository_FileRepository');
 		$fileRepository->addToIndex($fileObject);
 
 		$this->redirect('list', NULL, NULL, array('mount' => $mountUid, 'path' => dirname($fileObject->getIdentifier())));
@@ -95,15 +95,15 @@ class Tx_VfsFilelist_Controller_FileListController extends Tx_Extbase_MVC_Contro
 
 	public function uploadAction() {
 		$mountUid = $this->request->getArgument('mount');
-		/** @var $mount t3lib_vfs_Domain_Model_Mount */
+		/** @var $mount t3lib_file_Domain_Model_Mount */
 		$mount = $this->mountRepository->findByUid($mountUid);
 
 		$path = $this->request->getArgument('identifier');
 
-		/** @var $uploader t3lib_vfs_Service_UploaderService */
-		$uploader = t3lib_div::makeInstance('t3lib_vfs_Service_UploaderService');
+		/** @var $uploader t3lib_file_Service_UploaderService */
+		$uploader = t3lib_div::makeInstance('t3lib_file_Service_UploaderService');
 
-		$files = $_FILES['tx_vfsfilelist_tools_vfsfilelistfilelist'];
+		$files = $_FILES['tx_filefilelist_tools_filefilelistfilelist'];
 		if (isset($files['name']['file'])) {
 			if ($files['error']['file']) {
 				// TODO handle error
