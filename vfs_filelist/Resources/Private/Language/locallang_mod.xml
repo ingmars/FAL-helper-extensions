@@ -6,9 +6,9 @@
 	</meta>
 	<data type="array">
 		<languageKey index="default" type="array">
-			<label index="mlang_tabs_tab">VFS Filelist</label>
-			<label index="mlang_labels_tabdescr">VFS Filelist</label>
-			<label index="mlang_labels_tablabel">VFS Filelist</label>
+			<label index="mlang_tabs_tab">Filelist</label>
+			<label index="mlang_labels_tabdescr">Filelist</label>
+			<label index="mlang_labels_tablabel">Filelist</label>
 		</languageKey>
 	</data>
 </T3locallang>
