@@ -69,11 +69,11 @@ class Tx_FileFilelist_Controller_FileListController extends Tx_Extbase_MVC_Contr
 		$this->view->assign('storage', $storage);
 
 		$path = $this->request->getArgument('path');
-		$currentCollection = $this->factory->createStorageCollectionObject($storage, $path, '');
+		$currentFolder = $this->factory->createFolderObject($storage, $path, '');
 		$this->view->assign('path', $path);
 
-		$this->view->assign('directories', $currentCollection->getSubcollections());
-		$this->view->assign('files', $currentCollection->getFiles());
+		$this->view->assign('directories', $currentFolder->getSubfolders());
+		$this->view->assign('files', $currentFolder->getFiles());
 	}
 
 	public function indexFileAction() {
