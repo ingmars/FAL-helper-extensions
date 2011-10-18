@@ -1,0 +1,12 @@
+<f:layout name="backend" />
+
+<f:section name="contents">
+
+	<h2>Available storages</h2>
+	<ul>
+	<f:for each="{storages}" as="storage">
+		<li><f:link.action action="list" arguments="{storage: storage.uid, path: '/'}">{storage.name}</f:link.action></li>
+	</f:for>
+	</ul>
+
+</f:section>

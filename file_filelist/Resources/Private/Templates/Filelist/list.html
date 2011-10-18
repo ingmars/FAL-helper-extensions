@@ -1,0 +1,40 @@
+<f:layout name="backend" />
+
+<f:section name="contents">
+
+	<p>aktueller Storage: {storage.name}, {storage.uid}</p>
+
+	<p>aktueller Pfad: {path}</p>
+
+	<h2>Directories</h2>
+	<ul>
+	<f:for each="{directories}" as="directory">
+		<li><f:link.action action="list" arguments="{storage: storage.uid, path: directory.identifier}">{directory.name}</f:link.action></li>
+	</f:for>
+	</ul>
+
+	<h2>Files</h2>
+	<ul>
+	<f:for each="{files}" as="file">
+		<li>{file.name}&nbsp;&nbsp;
+			<f:if condition="{file.indexed}">
+				<f:then>indexed</f:then>
+				<f:else><f:link.action action="indexFile" arguments="{storage: storage.uid, file: file.identifier}">Index file</f:link.action></f:else>
+			</f:if>
+			&nbsp;&nbsp;<f:link.action action="copy" arguments="{storage: storage.uid, sourceFile: file.identifier}">Copy file</f:link.action>
+			&nbsp;&nbsp;<f:link.action action="publish" arguments="{storage: storage.uid, file: file.identifier}">Publish file</f:link.action>
+			&nbsp;&nbsp;URL: {file.publicUrl}
+		</li>
+	</f:for>
+	</ul>
+
+	<h2>Upload</h2>
+	<f:form action="upload" enctype="multipart/form-data">
+		<f:form.hidden name="storage" value="{storage.uid}" />
+		<f:form.hidden name="identifier" value="{path}" />
+
+		<f:form.upload name="file" />
+		<f:form.submit value="Upload" />
+	</f:form>
+
+</f:section>

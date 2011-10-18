@@ -41,9 +41,9 @@ class Tx_FileFilelist_Controller_FileListController extends Tx_Extbase_MVC_Contr
 	protected $factory;
 
 	/**
-	 * @var t3lib_file_Domain_Repository_MountRepository
+	 * @var t3lib_file_Repository_StorageRepository
 	 */
-	protected $mountRepository;
+	protected $storageRepository;
 
 	/**
 	 * Initializes the controller before invoking an action method.
@@ -53,23 +53,23 @@ class Tx_FileFilelist_Controller_FileListController extends Tx_Extbase_MVC_Contr
 	protected function initializeAction() {
 		$this->factory = t3lib_div::makeInstance('t3lib_file_Factory');
 
-		$this->mountRepository = t3lib_div::makeInstance('t3lib_file_Domain_Repository_MountRepository');
+		$this->storageRepository = t3lib_div::makeInstance('t3lib_file_Repository_StorageRepository');
 	}
 
 	public function indexAction() {
-		/** @var $mountRepository t3lib_file_Domain_Repository_MountRepository */
-		$mounts = $this->mountRepository->findAvailableMounts();
+		/** @var $storageRepository t3lib_file_Repository_StorageRepository */
+		$storages = $this->storageRepository->findAll();
 
-		$this->view->assign('mounts', $mounts);
+		$this->view->assign('storages', $storages);
 	}
 
 	public function listAction() {
-		$mount = $this->request->getArgument('mount');
-		$mount = $this->mountRepository->findByUid($mount);
-		$this->view->assign('mount', $mount);
+		$storage = $this->request->getArgument('storage');
+		$storage = $this->storageRepository->findByUid($storage);
+		$this->view->assign('storage', $storage);
 
 		$path = $this->request->getArgument('path');
-		$currentCollection = $this->factory->createStorageCollectionObject($mount, $path, '');
+		$currentCollection = $this->factory->createStorageCollectionObject($storage, $path, '');
 		$this->view->assign('path', $path);
 
 		$this->view->assign('directories', $currentCollection->getSubcollections());
@@ -77,26 +77,26 @@ class Tx_FileFilelist_Controller_FileListController extends Tx_Extbase_MVC_Contr
 	}
 
 	public function indexFileAction() {
-		$mountUid = $this->request->getArgument('mount');
-		/** @var $mount t3lib_file_Domain_Model_Mount */
-		$mount = $this->mountRepository->findByUid($mountUid);
+		$storageUid = $this->request->getArgument('storage');
+		/** @var $storage t3lib_file_Storage */
+		$storage = $this->storageRepository->findByUid($storageUid);
 
 		$file = $this->request->getArgument('file');
-		$file = $mount->getDriver()->getFile($file);
+		$file = $storage->getDriver()->getFile($file);
 
 		$fileObject = $this->factory->createFileObject($file);
 
-		/** @var t3lib_file_Domain_Repository_FileRepository $fileRepository */
-		$fileRepository = t3lib_div::makeInstance('t3lib_file_Domain_Repository_FileRepository');
+		/** @var t3lib_file_Repository_FileRepository $fileRepository */
+		$fileRepository = t3lib_div::makeInstance('t3lib_file_Repository_FileRepository');
 		$fileRepository->addToIndex($fileObject);
 
-		$this->redirect('list', NULL, NULL, array('mount' => $mountUid, 'path' => dirname($fileObject->getIdentifier())));
+		$this->redirect('list', NULL, NULL, array('storage' => $storageUid, 'path' => dirname($fileObject->getIdentifier())));
 	}
 
 	public function uploadAction() {
-		$mountUid = $this->request->getArgument('mount');
-		/** @var $mount t3lib_file_Domain_Model_Mount */
-		$mount = $this->mountRepository->findByUid($mountUid);
+		$storageUid = $this->request->getArgument('storage');
+		/** @var $storage t3lib_file_Storage */
+		$storage = $this->storageRepository->findByUid($storageUid);
 
 		$path = $this->request->getArgument('identifier');
 
@@ -110,13 +110,48 @@ class Tx_FileFilelist_Controller_FileListController extends Tx_Extbase_MVC_Contr
 			}
 			$tempfileName = $files['tmp_name']['file'];
 			$origFilename = $files['name']['file'];
-			$uploader->addUploadedFile($tempfileName, $mount, $path, $origFilename);
+			$uploader->addUploadedFile($tempfileName, $storage, $path, $origFilename);
 		} elseif (isset($files['name']['files']) && is_array($files['name']['files'])) {
 			// TODO multiple files
 		}
 		//$uploader->addUploadedFile();
 
-		$this->redirect('list', NULL, NULL, array('mount' => $mountUid, 'path' => $path));
+		$this->redirect('list', NULL, NULL, array('storage' => $storageUid, 'path' => $path));
+	}
+
+	public function copyAction() {
+		$storageUid = $this->request->getArgument('storage');
+		/** @var $storage t3lib_file_Domain_Model_Storage */
+		$storage = $this->storageRepository->findByUid($storageUid);
+		$sourceIdentifier = $this->request->getArgument('sourceFile');
+
+		if ($this->request->hasArgument('targetFile')) {
+			$targetIdentifier = $this->request->getArgument('targetFile');
+			$sourceFile = $storage->getFileByIdentifier($sourceIdentifier);
+			/** @var $factory t3lib_file_Factory */
+			$factory = t3lib_div::makeInstance('t3lib_file_Factory');
+			$sourceFile = $factory->createFileObject($sourceFile);
+
+			$storage->copyFile($sourceFile, $targetIdentifier);
+			$this->redirect('list', NULL, NULL, array('storage' => $storageUid, 'path' => dirname($targetIdentifier)));
+		} else {
+			$this->view->assign('sourceFile', $sourceIdentifier);
+			$this->view->assign('storage', $storage);
+		}
+	}
+
+	public function publishAction() {
+		$storageUid = $this->request->getArgument('storage');
+		/** @var $storage t3lib_file_Domain_Model_Storage */
+		$storage = $this->storageRepository->findByUid($storageUid);
+
+		$fileIdentifier = $this->request->getArgument('file');
+		$fileRecord = $storage->getDriver()->getFile($fileIdentifier);
+		$fileObject = $this->factory->createFileObject($fileRecord);
+
+		$publisher = $storage->getPublisher();
+
+		$publisher->publishFile($fileObject);
 	}
 
 	/**
