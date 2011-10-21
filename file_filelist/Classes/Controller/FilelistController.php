@@ -1,5 +1,4 @@
 <?php
-
 /***************************************************************
  *  Copyright notice
  *
@@ -64,27 +63,26 @@ class Tx_FileFilelist_Controller_FileListController extends Tx_Extbase_MVC_Contr
 	}
 
 	public function listAction() {
-		$storage = $this->request->getArgument('storage');
-		$storage = $this->storageRepository->findByUid($storage);
-		$this->view->assign('storage', $storage);
-
+		$storageUid = $this->request->getArgument('storage');
 		$path = $this->request->getArgument('path');
-		$currentFolder = $this->factory->createFolderObject($storage, $path, '');
-		$this->view->assign('path', $path);
 
+		$storage = $this->storageRepository->findByUid($storageUid);
+		$currentFolder = $storage->getFolder($path);
+
+		$this->view->assign('path', $path);
+		$this->view->assign('storage', $storage);
 		$this->view->assign('directories', $currentFolder->getSubfolders());
 		$this->view->assign('files', $currentFolder->getFiles());
 	}
 
 	public function indexFileAction() {
 		$storageUid = $this->request->getArgument('storage');
+		$file = $this->request->getArgument('file');
+
 		/** @var $storage t3lib_file_Storage */
 		$storage = $this->storageRepository->findByUid($storageUid);
-
-		$file = $this->request->getArgument('file');
-		$file = $storage->getDriver()->getFile($file);
-
-		$fileObject = $this->factory->createFileObject($file);
+		$fileInfo = $storage->getFile($file);
+		$fileObject = $this->factory->createFileObject($fileInfo);
 
 		/** @var t3lib_file_Repository_FileRepository $fileRepository */
 		$fileRepository = t3lib_div::makeInstance('t3lib_file_Repository_FileRepository');
@@ -95,10 +93,10 @@ class Tx_FileFilelist_Controller_FileListController extends Tx_Extbase_MVC_Contr
 
 	public function uploadAction() {
 		$storageUid = $this->request->getArgument('storage');
+		$path = $this->request->getArgument('identifier');
+
 		/** @var $storage t3lib_file_Storage */
 		$storage = $this->storageRepository->findByUid($storageUid);
-
-		$path = $this->request->getArgument('identifier');
 
 		/** @var $uploader t3lib_file_Service_UploaderService */
 		$uploader = t3lib_div::makeInstance('t3lib_file_Service_UploaderService');
@@ -142,16 +140,16 @@ class Tx_FileFilelist_Controller_FileListController extends Tx_Extbase_MVC_Contr
 
 	public function publishAction() {
 		$storageUid = $this->request->getArgument('storage');
+		$fileIdentifier = $this->request->getArgument('file');
+
 		/** @var $storage t3lib_file_Domain_Model_Storage */
 		$storage = $this->storageRepository->findByUid($storageUid);
-
-		$fileIdentifier = $this->request->getArgument('file');
-		$fileRecord = $storage->getDriver()->getFile($fileIdentifier);
-		$fileObject = $this->factory->createFileObject($fileRecord);
+		$fileInfo = $storage->getFile($fileIdentifier);
+		$fileObject = $this->factory->createFileObject($fileInfo);
 
 		$publisher = $storage->getPublisher();
 
-		$publisher->publishFile($fileObject);
+	//	$publisher->publishFile($fileObject);
 	}
 
 	/**
