@@ -24,6 +24,7 @@
 			&nbsp;&nbsp;<f:link.action action="copy" arguments="{storage: storage.uid, sourceFile: file.identifier}">Copy file</f:link.action>
 			&nbsp;&nbsp;<f:link.action action="publish" arguments="{storage: storage.uid, file: file.identifier}">Publish file</f:link.action>
 			&nbsp;&nbsp;URL: {file.publicUrl}
+			&nbsp;&nbsp;MimeType: {file.mimeType}
 		</li>
 	</f:for>
 	</ul>
