@@ -125,7 +125,7 @@ class Tx_FileFilelist_Controller_FileListController extends Tx_Extbase_MVC_Contr
 
 		if ($this->request->hasArgument('targetFile')) {
 			$targetIdentifier = $this->request->getArgument('targetFile');
-			$sourceFile = $storage->getFileByIdentifier($sourceIdentifier);
+			$sourceFile = $storage->getFile($sourceIdentifier);
 			/** @var $factory t3lib_file_Factory */
 			$factory = t3lib_div::makeInstance('t3lib_file_Factory');
 			$sourceFile = $factory->createFileObject($sourceFile);
