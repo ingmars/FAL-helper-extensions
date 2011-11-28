@@ -93,25 +93,49 @@ class Tx_FileFilelist_Controller_FileListController extends Tx_Extbase_MVC_Contr
 	public function uploadAction() {
 		$storageUid = $this->request->getArgument('storage');
 		$folderIdentifier = $this->request->getArgument('identifier');
+		$folderCombinedIdentifier = $storageUid . ':' . $folderIdentifier;
 
 		/** @var $storage t3lib_file_Storage */
 		$storage = $this->storageRepository->findByUid($storageUid);
 
-		/** @var $uploader t3lib_file_Service_UploaderService */
-		$uploader = t3lib_div::makeInstance('t3lib_file_Service_UploaderService');
+			// Initializing:
+		/** @var $fileProcessor t3lib_extFileFunctions */
+		$fileProcessor = t3lib_div::makeInstance('t3lib_extFileFunctions');
+		$fileProcessor->init($GLOBALS['FILEMOUNTS'], $GLOBALS['TYPO3_CONF_VARS']['BE']['fileExtensions']);
+		$fileProcessor->init_actionPerms($GLOBALS['BE_USER']->getFileoperationPermissions());
+		$fileProcessor->dontCheckForUnique = t3lib_div::_GP('overwriteExistingFiles') ? 1 : 0; // @todo change this to fit Vidi UI
 
+
+		// Rearranged $_FILES to suit extFileFunctions needs
 		$files = $_FILES['tx_filefilelist_tools_filefilelistfilelist'];
+		$_FILES['upload_tx_filefilelist_tools_filefilelistfilelist'] = array(
+			'name' => $files['name']['file'],
+			'type' => $files['type']['file'],
+			'tmp_name' => $files['tmp_name']['file'],
+			'error' => $files['error']['file'],
+			'size' => $files['size']['file'],
+		);
+		unset($_FILES['tx_filefilelist_tools_filefilelistfilelist']); // remove the old reference
 		if (isset($files['name']['file'])) {
 			if ($files['error']['file']) {
 				// TODO handle error
 			}
-			$tempfileName = $files['tmp_name']['file'];
-			$origFilename = $files['name']['file'];
-			$uploader->addUploadedFile($tempfileName, $storage, $folderIdentifier, $origFilename);
+
+			$fileValues = array(
+				'upload' => array(
+					array(
+					'data' => 'tx_filefilelist_tools_filefilelistfilelist', // is used as an id within $_FILES
+					'target' => $folderCombinedIdentifier,
+					)
+				)
+			);
+
+			$fileProcessor->start($fileValues);
+			$fileProcessor->processData();
 		} elseif (isset($files['name']['files']) && is_array($files['name']['files'])) {
 			// TODO multiple files
 		}
-		//$uploader->addUploadedFile();
+
 
 		$this->redirect('list', NULL, NULL, array('storage' => $storageUid, 'path' => $folderIdentifier));
 	}
