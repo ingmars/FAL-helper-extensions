@@ -13,6 +13,15 @@
 	</f:for>
 	</ul>
 
+	<h2>Create new random folder</h2>
+
+	<f:form action="createFolder" enctype="multipart/form-data">
+		<f:form.hidden name="storage" value="{storage.uid}" />
+		<f:form.hidden name="identifier" value="{path}" />
+
+		<f:form.submit value="Create one!" />
+	</f:form>
+
 	<h2>Files</h2>
 	<ul>
 	<f:for each="{files}" as="file">

@@ -45,6 +45,11 @@ class Tx_FileFilelist_Controller_FileListController extends Tx_Extbase_MVC_Contr
 	protected $storageRepository;
 
 	/**
+	 * @var t3lib_extFileFunctions
+	 */
+	protected $fileProcessor;
+
+	/**
 	 * Initializes the controller before invoking an action method.
 	 *
 	 * @return void
@@ -53,6 +58,12 @@ class Tx_FileFilelist_Controller_FileListController extends Tx_Extbase_MVC_Contr
 		$this->factory = t3lib_div::makeInstance('t3lib_file_Factory');
 
 		$this->storageRepository = t3lib_div::makeInstance('t3lib_file_Repository_StorageRepository');
+
+			// Initializing:
+		$this->fileProcessor = t3lib_div::makeInstance('t3lib_extFileFunctions');
+		$this->fileProcessor->init($GLOBALS['FILEMOUNTS'], $GLOBALS['TYPO3_CONF_VARS']['BE']['fileExtensions']);
+		$this->fileProcessor->init_actionPerms($GLOBALS['BE_USER']->getFileoperationPermissions());
+		$this->fileProcessor->dontCheckForUnique = t3lib_div::_GP('overwriteExistingFiles') ? 1 : 0; // @todo change this to fit Vidi UI
 	}
 
 	public function indexAction() {
@@ -60,6 +71,47 @@ class Tx_FileFilelist_Controller_FileListController extends Tx_Extbase_MVC_Contr
 		$storages = $this->storageRepository->findAll();
 
 		$this->view->assign('storages', $storages);
+	}
+
+	/**
+	 * Create a new folder (random for now)
+	 */
+	public function createFolderAction() {
+		$storageUid = $this->request->getArgument('storage');
+		$folderIdentifier = $this->request->getArgument('identifier');
+		$folderCombinedIdentifier = $storageUid . ':' . $folderIdentifier;
+
+		$fileIdentifier = '_' . $this->genRandomString();
+		$newFileName = $folderCombinedIdentifier;
+
+		$fileValues = array(
+			'newfolder' => array(
+				array(
+					'data' => $fileIdentifier,
+					'target' => $newFileName,
+				)
+			)
+		);
+
+		$this->fileProcessor->start($fileValues);
+		$this->fileProcessor->processData();
+
+		$this->redirect('list', NULL, NULL, array('storage' => $storageUid, 'path' => $folderIdentifier));
+	}
+
+	/**
+	 * Temporary method to return a random string
+	 *
+	 * @return string
+	 */
+	protected function genRandomString() {
+		$length = 10;
+		$characters = '0123456789abcdefghijklmnopqrstuvwxyz';
+		$string = '';
+		for ($p = 0; $p < $length; $p++) {
+			$string .= $characters[mt_rand(0, strlen($characters))];
+		}
+		return $string;
 	}
 
 	public function listAction() {
@@ -98,14 +150,6 @@ class Tx_FileFilelist_Controller_FileListController extends Tx_Extbase_MVC_Contr
 		/** @var $storage t3lib_file_Storage */
 		$storage = $this->storageRepository->findByUid($storageUid);
 
-			// Initializing:
-		/** @var $fileProcessor t3lib_extFileFunctions */
-		$fileProcessor = t3lib_div::makeInstance('t3lib_extFileFunctions');
-		$fileProcessor->init($GLOBALS['FILEMOUNTS'], $GLOBALS['TYPO3_CONF_VARS']['BE']['fileExtensions']);
-		$fileProcessor->init_actionPerms($GLOBALS['BE_USER']->getFileoperationPermissions());
-		$fileProcessor->dontCheckForUnique = t3lib_div::_GP('overwriteExistingFiles') ? 1 : 0; // @todo change this to fit Vidi UI
-
-
 		// Rearranged $_FILES to suit extFileFunctions needs
 		$files = $_FILES['tx_filefilelist_tools_filefilelistfilelist'];
 		$_FILES['upload_tx_filefilelist_tools_filefilelistfilelist'] = array(
@@ -130,8 +174,8 @@ class Tx_FileFilelist_Controller_FileListController extends Tx_Extbase_MVC_Contr
 				)
 			);
 
-			$fileProcessor->start($fileValues);
-			$fileProcessor->processData();
+			$this->fileProcessor->start($fileValues);
+			$this->fileProcessor->processData();
 		} elseif (isset($files['name']['files']) && is_array($files['name']['files'])) {
 			// TODO multiple files
 		}
